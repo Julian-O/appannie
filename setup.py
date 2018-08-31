@@ -17,6 +17,8 @@ setup_args = dict(
     include_package_data=True,
     install_requires=[
         'requests',
+        'six',
+        'future'
     ],
     author='Marius Bodea',
     author_email='mbodea@gmail.com',
