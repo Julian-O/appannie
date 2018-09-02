@@ -24,7 +24,7 @@ class Product(object):
                           product_id=self.product_id,
                           data_source=data_source or u'')
 
-    def page(self, page=1):
+    def page(self, page=0):
         uri = self._format_account_uri(self.PRODUCTS_ENDPOINT)
         return self.paginator.make(uri).page(page)
 

@@ -14,7 +14,7 @@ class Paginator(object):
         # Copy dictionary, defaulting to empty.
         self.data = dict(data or {})
 
-    def page(self, page=1):
+    def page(self, page=0):
         # Add page_index to the dictionary passed in request.
         data = dict(self.data)
         data['page_index'] = page - 1
@@ -43,3 +43,24 @@ class Paginator(object):
             union_result.extend(page_result)
 
         return union_result
+
+    def __iter__(self):
+        if not self.union_key:
+            raise ValueError("Union key parameter is missing")
+
+        page_index = 0
+        data = dict(self.data)
+
+        while True:
+            data['page_index'] = page_index
+            whole_page_result = self.http_client.request(self.uri, data)
+            interesting_data = whole_page_result.get(self.union_key, [])
+            for entry in interesting_data:
+                yield entry
+            page_num = whole_page_result.get('page_num')
+
+            # Check if that was the last page.
+            if not page_num or page_index >= page_num - 1:
+                break
+
+            page_index += 1
