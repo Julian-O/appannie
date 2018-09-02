@@ -11,15 +11,12 @@ class Paginator(object):
         self.http_client = http_client
         self.union_key = union_key
         self.uri = uri
-        if data is None:
-            data = {}
-        self.data = data
+        # Copy dictionary, defaulting to empty.
+        self.data = dict(data or {})
 
     def page(self, page=1):
-        if self.data:
-            data = dict(self.data)
-        else:
-            data = self.data
+        # Add page_index to the dictionary passed in request.
+        data = dict(self.data)
         data['page_index'] = page - 1
 
         return self.http_client.request(self.uri, data)
@@ -30,10 +27,7 @@ class Paginator(object):
 
         union_result = []
 
-        if self.data:
-            data = dict(self.data)
-        else:
-            data = self.data
+        data = dict(self.data)
 
         page_num = 1
         page_index = 0
