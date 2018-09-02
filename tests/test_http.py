@@ -26,12 +26,12 @@ class TestHttp(unittest.TestCase):
         }
 
         url = self.client.get_url(uri)
-        self.assertTrue(url.startswith(HttpClient.ENDPOINT))
+        self.assertTrue(url.startswith(HttpClient.ENDPOINT_PREFIX))
         self.assertTrue(url.endswith('/some/uri'))
         self.assertFalse('?' in url)
 
         url = self.client.get_url(uri, data)
-        self.assertTrue(url.startswith(HttpClient.ENDPOINT))
+        self.assertTrue(url.startswith(HttpClient.ENDPOINT_PREFIX))
         self.assertTrue(url.endswith('/some/uri?param1=val1&param2=val2'))
         self.assertTrue('?' in url)
 

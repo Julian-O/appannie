@@ -8,13 +8,13 @@ from .exception import (AppAnnieException, AppAnnieBadRequestException,
 
 
 class HttpClient(object):
-    ENDPOINT = 'https://api.appannie.com/v1.2'
+    ENDPOINT_PREFIX = 'https://api.appannie.com/v1.2'
 
     def __init__(self, api_key):
         self.api_key = api_key
 
     def get_url(self, uri, data=None):
-        url = self.ENDPOINT + uri
+        url = self.ENDPOINT_PREFIX + uri
         if data:
             # urlencode parameters deterministically:
             sorted_values = sorted(data.items(), key=lambda val: val[0])
