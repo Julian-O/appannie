@@ -118,4 +118,4 @@ class TestHttp(unittest.TestCase):
         mock_get.return_value = response
         with self.assertRaises(AppAnnieException) as context:
             self.client.request(uri)
-            self.assertEqual(context.exception.message, expected_message)
+            self.assertEqual(str(context.exception.message), expected_message)

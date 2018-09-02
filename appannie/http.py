@@ -37,7 +37,7 @@ class HttpClient(object):
                 raise self.get_exception_from_response(response)
             return response
         except requests.exceptions.RequestException as e:
-            raise AppAnnieException(e.message)
+            raise AppAnnieException(str(e))
         except ValueError:
             raise AppAnnieException("Empty data returned by AppAnnie.")
 
