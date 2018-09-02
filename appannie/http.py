@@ -8,13 +8,20 @@ from .exception import (AppAnnieException, AppAnnieBadRequestException,
 
 
 class HttpClient(object):
-    ENDPOINT_PREFIX = 'https://api.appannie.com/v1.2'
-
+    ENDPOINT_PREFIX = 'https://api.appannie.com'
+    DEFAULT_VERSION = '/v1.2'
     def __init__(self, api_key):
         self.api_key = api_key
 
     def get_url(self, uri, data=None):
-        url = self.ENDPOINT_PREFIX + uri
+
+        # Some of the older code assumes the API version number v1.2
+        # will be inserted.
+        # Some of the newer code explicitly provides the API version
+        # number.
+        # Detect which this is and adapt appropriately.
+        version_shim = "" if uri.startswith("/v1") else self.DEFAULT_VERSION
+        url = self.ENDPOINT_PREFIX + version_shim + uri
         if data:
             # urlencode parameters deterministically:
             sorted_values = sorted(data.items(), key=lambda val: val[0])

@@ -18,7 +18,7 @@ class TestHttp(unittest.TestCase):
         self.assertIn('Authorization', headers)
         self.assertTrue(self.API_KEY in headers['Authorization'])
 
-    def test_get_url(self):
+    def test_get_url_default_version(self):
         uri = '/some/uri'
         data = {
             'param1': 'val1',
@@ -28,12 +28,27 @@ class TestHttp(unittest.TestCase):
         url = self.client.get_url(uri)
         self.assertTrue(url.startswith(HttpClient.ENDPOINT_PREFIX))
         self.assertTrue(url.endswith('/some/uri'))
+        self.assertTrue("/v1.2/" in url)
         self.assertFalse('?' in url)
 
         url = self.client.get_url(uri, data)
         self.assertTrue(url.startswith(HttpClient.ENDPOINT_PREFIX))
         self.assertTrue(url.endswith('/some/uri?param1=val1&param2=val2'))
         self.assertTrue('?' in url)
+
+    def test_get_url_specified_version(self):
+        uri = '/v1.4/some/uri'
+        data = {
+            'param1': 'val1',
+            'param2': 'val2',
+        }
+
+        url = self.client.get_url(uri)
+        self.assertTrue(url.startswith(HttpClient.ENDPOINT_PREFIX))
+        self.assertTrue(url.endswith('/some/uri'))
+        self.assertTrue("/v1.4/" in url)
+        self.assertTrue("/v1.2/" not in url)
+        self.assertFalse('?' in url)
 
     def test_is_error(self):
         response = {'error': 'some error'}
