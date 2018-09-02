@@ -1,6 +1,5 @@
 import datetime
-from past.builtins import basestring
-from six import iteritems
+from six import iteritems, string_types
 DATE_FORMAT = '%Y-%m-%d'
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
@@ -11,7 +10,7 @@ def round_to_day(date):
 
 def to_day(date_or_date_string, date_format=DATE_FORMAT):
     """Convert to a datetime.date instance, rounded down to day."""
-    if isinstance(date_or_date_string, basestring):
+    if isinstance(date_or_date_string, string_types):
         date = datetime.datetime.strptime(date_or_date_string, date_format)
     elif isinstance(date_or_date_string, datetime.datetime):
         date = date_or_date_string
@@ -25,10 +24,10 @@ def to_day(date_or_date_string, date_format=DATE_FORMAT):
     return round_to_day(date)
 
 
-def list_to_str(thelist, joinstr='+'):
-    if isinstance(thelist, list):
-        thelist = joinstr.join(thelist)
-    return thelist
+def collection_to_str(collection, joinstr='+'):
+    if isinstance(collection, string_types):
+        return collection
+    return joinstr.join([str(item) for item in collection])
 
 
 def format_request_data(**kwargs):
@@ -40,15 +39,15 @@ def format_request_data(**kwargs):
     if data.get('end_date'):
         data['end_date'] = str(to_day(data['end_date']))
     if data.get('countries'):
-        data['countries'] = list_to_str(data['countries']).upper()
+        data['countries'] = collection_to_str(data['countries']).upper()
     if data.get('categories'):
-        data['categories'] = list_to_str(data['categories'], joinstr='+')
+        data['categories'] = collection_to_str(data['categories'])
     if data.get('category'):
-        data['category'] = list_to_str(data['category'], joinstr='+')
+        data['category'] = collection_to_str(data['category'])
     if data.get('device'):
-        data['device'] = list_to_str(data['device'])
+        data['device'] = collection_to_str(data['device'])
     if data.get('types'):
-        data['types'] = list_to_str(data['types'])
+        data['types'] = collection_to_str(data['types'])
     if data.get('keywords'):
-        data['keywords'] = list_to_str(data['keywords'], ',')
+        data['keywords'] = collection_to_str(data['keywords'], ',')
     return data

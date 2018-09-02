@@ -34,15 +34,20 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(ValueError):
             util.to_day('2017-03-03 invalid format')
 
-    def test_list_to_str(self):
-        result = util.list_to_str('US+GB')
+    def test_collection_to_str(self):
+        result = util.collection_to_str('US+GB')
         self.assertEqual(result, 'US+GB')
 
-        result = util.list_to_str(['US', 'GB'])
+        result = util.collection_to_str(['US', 'GB'])
         self.assertEqual(result, 'US+GB')
 
-        result = util.list_to_str(['US', 'GB'], joinstr=',')
+        result = util.collection_to_str(['US', 'GB'], joinstr=',')
         self.assertEqual(result, 'US,GB')
+
+        result = util.collection_to_str(('US', 'GB'))
+        self.assertEqual(result, 'US+GB')
+        result = util.collection_to_str({'US', 'GB'})
+        self.assertTrue(result == 'US+GB' or result == 'GB+US')
 
     def test_format_request_data(self):
         data = {
