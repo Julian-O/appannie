@@ -5,7 +5,7 @@ from .exception import (AppAnnieException, AppAnnieBadRequestException,
                         AppAnnieNotFoundException,
                         AppAnnieUnauthorizedException,
                         AppAnnieRateLimitException)
-
+from .throttle import throttle
 
 class HttpClient(object):
     ENDPOINT_PREFIX = 'https://api.appannie.com'
@@ -34,6 +34,11 @@ class HttpClient(object):
             'Accept': 'application/json',
         }
 
+    # Use throttle decorator to enforce the per-minute rate-limit to avoid
+    # 429 responses.
+    # Does not enforce daily and monthly limits, nor does it prevent several
+    # clashes with other instances/programs running under the same credentials.
+    @throttle(min_period=60, max_calls=30)
     def request(self, uri, data=None):
         url = self.get_url(uri, data)
         headers = self._get_default_headers()
